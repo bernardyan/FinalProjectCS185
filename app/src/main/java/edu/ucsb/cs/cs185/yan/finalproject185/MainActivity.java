@@ -1,5 +1,6 @@
 package edu.ucsb.cs.cs185.yan.finalproject185;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,8 +25,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         webView = (WebView)findViewById(R.id.webView);
-
         final EditText edittext = (EditText) findViewById(R.id.urlField);
+
+        if (Build.VERSION.SDK_INT >= 19) {
+            webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        }
+
         edittext.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button

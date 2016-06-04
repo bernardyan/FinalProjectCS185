@@ -14,14 +14,7 @@
     tools:context="edu.ucsb.cs.cs185.yan.finalproject185.MainActivity">
 
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/urlField"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@id/buttonForward"
-        android:layout_marginTop="0dp" />
+
 
     <WebView
         android:layout_width="match_parent"
@@ -59,7 +52,15 @@
         android:layout_above="@+id/webView"
         android:layout_toEndOf="@+id/buttonBackward" />
 
-
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/urlField"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/buttonForward"
+        android:layout_marginTop="0dp"
+        android:singleLine="true" />
     
 
 </RelativeLayout>
