@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
@@ -15,10 +16,16 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+//gesture libraries
+import android.view.MotionEvent;
+import android.gesture.Gesture;
+import static android.view.GestureDetector.*;
 
+public class MainActivity extends AppCompatActivity implements OnGestureListener, OnDoubleTapListener {
 
     WebView webView;
+    private GestureDetector GestureDetect;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
         webView = (WebView)findViewById(R.id.webView);
         final EditText edittext = (EditText) findViewById(R.id.urlField);
+
+        GestureDetect = new GestureDetector(this, this);
+        GestureDetect.setOnDoubleTapListener(this);
 
         if (Build.VERSION.SDK_INT >= 19) {
             webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -44,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        GestureDetect.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -66,5 +82,52 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        Toast.makeText(getApplicationContext(), "onSingleTapUp", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        Toast.makeText(getApplicationContext(), "onDoubleTap", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
     }
 }
