@@ -48,6 +48,7 @@
         android:text="&lt;"
         android:id="@+id/buttonBackward"
         android:layout_alignParentTop="true"
+        android:layout_above="@+id/webView"
         android:layout_toEndOf="@+id/button" />
     <Button
         android:layout_width="40dp"
@@ -55,6 +56,10 @@
         android:text=">"
         android:id="@+id/buttonForward"
         android:layout_alignParentTop="true"
+        android:layout_above="@+id/webView"
         android:layout_toEndOf="@+id/buttonBackward" />
+
+
+    
 
 </RelativeLayout>
