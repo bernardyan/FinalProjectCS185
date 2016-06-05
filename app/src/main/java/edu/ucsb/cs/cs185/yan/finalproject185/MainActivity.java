@@ -52,8 +52,14 @@ public class MainActivity extends AppCompatActivity implements OnGestureListener
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
+                    String url = edittext.getText().toString();
+                    if (url.substring(0,7).toLowerCase() != "http://" &&
+                            url.substring(0,8).toLowerCase() != "https://") {
+                        url = "http://" + url;
+                    }
+
                     Toast.makeText(getApplicationContext(),edittext.getText(), Toast.LENGTH_SHORT).show();
-                    webView.loadUrl(edittext.getText().toString());
+                    webView.loadUrl(url);
                     webView.setWebViewClient(new myWebViewClient());
                     return true;
                 }
@@ -62,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnGestureListener
         });
     }
 
-    private class myWebViewClient extends WebViewClient{
+    private class myWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url){
             webView.loadUrl(url);
