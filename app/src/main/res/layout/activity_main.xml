@@ -62,10 +62,13 @@
             android:layout_height="match_parent"
             android:id="@+id/nav_view"
             android:background="@android:color/transparent"
+            android:layout_marginTop="550dp"
             android:layout_gravity="right"
             app:menu="@menu/drawer_menu"
             app:itemTextColor="@android:color/white"
-            app:itemIconTint="@color/colorPrimaryDark"/>
+            app:itemIconTint="@color/colorPrimaryDark" />
+
+
 
     </android.support.v4.widget.DrawerLayout>
 

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item>
+    <item android:title="">
         <menu>
             <item
-                android:id="@+id/nav_folder_view"
+                android:id="@+id/btn_back"
                 android:title="@string/btn_back" />
 
             <item
-                android:id="@+id/nav_list_view"
+                android:id="@+id/btn_forward"
                 android:title="@string/btn_forward" />
 
             <item
-                android:id="@+id/nav_settings"
+                android:id="@+id/btn_refresh"
                 android:title="@string/btn_refresh" />
 
-            <item android:id="@+id/nav_help"
+            <item android:id="@+id/btn_url"
                 android:title="@string/btn_url" />
         </menu>
     </item>
