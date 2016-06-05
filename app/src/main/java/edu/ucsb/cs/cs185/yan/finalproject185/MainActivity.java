@@ -3,10 +3,15 @@ package edu.ucsb.cs.cs185.yan.finalproject185;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
@@ -15,6 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 //gesture libraries
@@ -26,10 +32,12 @@ import java.security.Key;
 
 import static android.view.GestureDetector.*;
 
-public class MainActivity extends AppCompatActivity implements OnGestureListener, OnDoubleTapListener {
+public class MainActivity extends AppCompatActivity
+        implements OnGestureListener, OnDoubleTapListener, NavigationView.OnNavigationItemSelectedListener {
 
     WebView webView;
     private GestureDetector GestureDetect;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +74,27 @@ public class MainActivity extends AppCompatActivity implements OnGestureListener
                 return false;
             }
         });
+
+
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(
+        //        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        //drawer.setDrawerListener(toggle);
+        //toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        //ListView listView =  (ListView) findViewById(R.id.right_drawer);
+        //listView.
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        return false;
     }
 
     private class myWebViewClient extends WebViewClient {
@@ -97,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnGestureListener
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -111,6 +140,14 @@ public class MainActivity extends AppCompatActivity implements OnGestureListener
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        if (item != null && item.getItemId() == android.R.id.home) {
+            if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+                drawer.closeDrawer(Gravity.RIGHT);
+            } else {
+                drawer.openDrawer(Gravity.RIGHT);
+            }
         }
 
         return super.onOptionsItemSelected(item);

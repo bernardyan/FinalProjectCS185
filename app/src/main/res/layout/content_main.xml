@@ -31,9 +31,7 @@
         android:layout_alignParentTop="true"
         android:text="Refresh"
         android:id="@+id/button"
-        android:layout_above="@+id/webView"
-
-         />
+        android:layout_above="@+id/webView" />
 
     <Button
         android:layout_width="40dp"

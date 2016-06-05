@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <menu>
+            <item
+                android:id="@+id/nav_folder_view"
+                android:title="@string/btn_back" />
+
+            <item
+                android:id="@+id/nav_list_view"
+                android:title="@string/btn_forward" />
+
+            <item
+                android:id="@+id/nav_settings"
+                android:title="@string/btn_refresh" />
+
+            <item android:id="@+id/nav_help"
+                android:title="@string/btn_url" />
+        </menu>
+    </item>
+
+</menu>
