@@ -13,12 +13,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
 //gesture libraries
 import android.view.MotionEvent;
 import android.gesture.Gesture;
+
+import java.net.URL;
+import java.security.Key;
+
 import static android.view.GestureDetector.*;
 
 public class MainActivity extends AppCompatActivity implements OnGestureListener, OnDoubleTapListener {
@@ -49,11 +54,32 @@ public class MainActivity extends AppCompatActivity implements OnGestureListener
                     // Perform action on key press
                     Toast.makeText(getApplicationContext(),edittext.getText(), Toast.LENGTH_SHORT).show();
                     webView.loadUrl(edittext.getText().toString());
+                    webView.setWebViewClient(new myWebViewClient());
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    private class myWebViewClient extends WebViewClient{
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView webView, String url){
+            webView.loadUrl(url);
+            return true;
+        }
+
+    }
+
+    @Override
+    public boolean onKeyDown(int KeyCode, KeyEvent event){
+        if((KeyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack())
+        {
+            webView.goBack();
+            return true;
+        }
+        return super.onKeyDown(KeyCode, event);
+
     }
 
     @Override
