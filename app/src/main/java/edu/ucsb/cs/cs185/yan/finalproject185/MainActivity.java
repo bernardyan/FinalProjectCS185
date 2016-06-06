@@ -117,12 +117,43 @@ public class MainActivity extends AppCompatActivity
         });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerListener(drawerListener);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // touch
+
+
     }
 
+    DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
 
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            switch(newState) {
+                case DrawerLayout.STATE_DRAGGING:
+                    Toast.makeText(getApplicationContext(), "STATE_DRAGGING", Toast.LENGTH_SHORT).show();
+
+                    break;
+            }
+        }
+    };
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -259,6 +290,7 @@ public class MainActivity extends AppCompatActivity
                 drawer.closeDrawer(Gravity.RIGHT);
             } else {
                 drawer.openDrawer(Gravity.RIGHT);
+                //Toast.makeText(getApplicationContext(), "Drawer open", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -277,7 +309,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        Toast.makeText(getApplicationContext(), "onSingleTapUp", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "onSingleTapUp", Toast.LENGTH_SHORT).show();
         return false;
     }
 
