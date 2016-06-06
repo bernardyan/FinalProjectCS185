@@ -3,16 +3,9 @@ package edu.ucsb.cs.cs185.yan.finalproject185;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-//import android.support.design.widget.CoordinatorLayout;
-//import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-//import android.support.design.widget.Snackbar;
-//import android.support.v4.app.ActionBarDrawerToggle;
-//import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-//import android.support.v7.widget.Toolbar;
-//import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,36 +18,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-//import android.widget.FrameLayout;
-//import android.widget.ListView;
 import android.widget.Toast;
-
-//gesture libraries
 import android.view.MotionEvent;
-//import android.gesture.Gesture;
-
-//import java.net.URL;
-//import java.security.Key;
-
-//forward/back
-import java.util.Deque;
-import java.util.ArrayDeque;
-
-//import static android.view.GestureDetector.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     WebView webView;
-    //private GestureDetector GestureDetect;
     DrawerLayout drawer;
-    //DrawerLayout drawer_view;
-    Deque<String> back_stack = new ArrayDeque<>();
-    Deque<String> forward_stack = new ArrayDeque<>();
     Boolean isForward;
     EditText edittext;
     Boolean isDragging;
-    //CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +41,6 @@ public class MainActivity extends AppCompatActivity
         webView = (WebView)findViewById(R.id.webView);
         webView.setWebViewClient(new myWebViewClient());
         edittext = (EditText) findViewById(R.id.urlField);
-
-        //GestureDetect = new GestureDetector(this, this);
-        //GestureDetect.setOnDoubleTapListener(this);
 
         if (Build.VERSION.SDK_INT >= 19) {
             webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -88,8 +59,6 @@ public class MainActivity extends AppCompatActivity
                             url.substring(0, 8).toLowerCase() != "https://") {
                         url = "http://" + url;
                     }
-
-                    //addToBackStack(url);
 
                     webView.loadUrl(url);
                     return true;
@@ -126,22 +95,10 @@ public class MainActivity extends AppCompatActivity
         });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerListener(drawerListener);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //MyNavigationView myNavigationView = new MyNavigationView(this);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        drawer.setDrawerListener(drawerListener);
-        //drawer_view = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        // touch
-        //TouchListener touchListener = new TouchListener();
-        //drawer.setOnTouchListener(touchListener);
-        //navigationView.setOnTouchListener(touchListener);
-        //coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-        //coordinatorLayout = new MyCoordinatorLayout(this);
-
     }
 
     @Override
@@ -187,30 +144,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.dispatchTouchEvent(event);
     }
-
-    /*
-    class TouchListener implements View.OnTouchListener {
-        @Override
-        public boolean onTouch(View v, MotionEvent event)
-        {
-            switch(event.getAction()){
-                case MotionEvent.ACTION_DOWN:
-                    Toast.makeText(getApplicationContext(), "touchListener DOWN", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case MotionEvent.ACTION_MOVE:
-                    //Toast.makeText(getApplicationContext(), "touchListener MOVE", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case MotionEvent.ACTION_UP:
-                    //edittext.setText("up");
-                    Toast.makeText(getApplicationContext(), "touchListener UP", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return true;
-        }
-    }
-    */
 
     DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
         @Override
@@ -276,20 +209,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*
-    private boolean addToBackStack(String url) {
-        if (!isForward) {
-            if (!forward_stack.isEmpty())
-                forward_stack.clear();
-        }
-        isForward = false;
-
-        back_stack.addFirst(url);
-
-        return true;
-    }
-    */
-
     private boolean onRefreshPress() {
         Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
         webView.loadUrl(webView.getUrl());
@@ -297,24 +216,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /*
-    private boolean onBackPress() {
-        if (back_stack.isEmpty() || back_stack.size() == 1) {
-            return false;
-        } else {
-            forward_stack.addFirst(back_stack.removeFirst());
-            webView.loadUrl(back_stack.peekFirst());
-
-            return true;
-        }
-    }
-    */
-
     @Override
     public void onBackPressed() {
-        Toast.makeText(getApplicationContext(), R.string.btn_back, Toast.LENGTH_SHORT).show();
-
-        if (webView.canGoBack() && forward_stack.size() != 1) {
+        if (webView.canGoBack()) {
+            Toast.makeText(getApplicationContext(), R.string.btn_back, Toast.LENGTH_SHORT).show();
             WebBackForwardList mWebBackForwardList = webView.copyBackForwardList();
             String historyUrl = mWebBackForwardList.getItemAtIndex(mWebBackForwardList.getCurrentIndex()-1).getUrl();
             edittext.setText(historyUrl);
@@ -328,32 +233,15 @@ public class MainActivity extends AppCompatActivity
         return;
     }
 
-
     public void onForwardPressed() {
-        Toast.makeText(getApplicationContext(), R.string.btn_forward, Toast.LENGTH_SHORT).show();
-
-        try {
+        if (webView.canGoForward()) {
+            Toast.makeText(getApplicationContext(), R.string.btn_forward, Toast.LENGTH_SHORT).show();
             WebBackForwardList mWebBackForwardList = webView.copyBackForwardList();
-            String forwardUrl = mWebBackForwardList.getItemAtIndex(mWebBackForwardList.getCurrentIndex()+1).getUrl();
+            String forwardUrl = mWebBackForwardList.getItemAtIndex(mWebBackForwardList.getCurrentIndex() + 1).getUrl();
             edittext.setText(forwardUrl);
             webView.goForward();
-        } catch (Exception e) {
-            // Nothing to go forward to
         }
     }
-
-    /*
-    private boolean onForwardPress() {
-        if (forward_stack.isEmpty()) {
-            return false;
-        } else {
-            back_stack.addFirst(forward_stack.peekFirst());
-            webView.loadUrl(forward_stack.removeFirst());
-
-            return true;
-        }
-    }
-    */
 
     private boolean onUrlPress() {
         //Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
@@ -373,14 +261,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onKeyDown(KeyCode, event);
     }
-
-    /*
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        GestureDetect.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -411,53 +291,4 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-    /*
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        Toast.makeText(getApplicationContext(), "onSingleTapUp", Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        return false;
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {
-        Toast.makeText(getApplicationContext(), "onDoubleTap", Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent e) {
-        return false;
-    }
-    */
 }
