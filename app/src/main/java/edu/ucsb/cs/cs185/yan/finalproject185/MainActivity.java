@@ -3,43 +3,44 @@ package edu.ucsb.cs.cs185.yan.finalproject185;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.CoordinatorLayout;
+//import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
+//import android.support.design.widget.Snackbar;
+//import android.support.v4.app.ActionBarDrawerToggle;
+//import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.GestureDetector;
+//import android.support.v7.widget.Toolbar;
+//import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebBackForwardList;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ListView;
+//import android.widget.FrameLayout;
+//import android.widget.ListView;
 import android.widget.Toast;
 
 //gesture libraries
 import android.view.MotionEvent;
 //import android.gesture.Gesture;
 
-import java.net.URL;
-import java.security.Key;
+//import java.net.URL;
+//import java.security.Key;
 
 //forward/back
 import java.util.Deque;
 import java.util.ArrayDeque;
 
-import static android.view.GestureDetector.*;
+//import static android.view.GestureDetector.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                         url = "http://" + url;
                     }
 
-                    addToBackStack(url);
+                    //addToBackStack(url);
 
                     webView.loadUrl(url);
                     return true;
@@ -102,7 +103,8 @@ public class MainActivity extends AppCompatActivity
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPress();
+                onBackPressed();
+                //edittext.setText(webView.getUrl());
             }
         });
 
@@ -110,7 +112,8 @@ public class MainActivity extends AppCompatActivity
         forward_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onForwardPress();
+                onForwardPressed();
+                //edittext.setText(webView.getUrl());
             }
         });
 
@@ -146,30 +149,39 @@ public class MainActivity extends AppCompatActivity
         // do what you need to with the event, and then...
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                Toast.makeText(getApplicationContext(), "touchListener DOWN", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "touchListener DOWN", Toast.LENGTH_SHORT).show();
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 //Toast.makeText(getApplicationContext(), "touchListener MOVE", Toast.LENGTH_SHORT).show();
-                //edittext.setText(event.getRawY()+"");
+                //edittext.setText(event.getRawX()+"");
                 break;
 
             case MotionEvent.ACTION_UP:
                 //edittext.setText("up");
                 float yPos = event.getRawY();
+                float xPos = event.getRawX();
 
                 if (isDragging) {
-                    if (yPos >= 1320 && yPos <= 1430) {
-                        onBackPress();
-                    } else if (yPos > 1430 && yPos <= 1530) {
-                        onForwardPress();
-                    } else if (yPos > 1530 && yPos <= 1630) {
+                    if (yPos >= 1300 && yPos <= 1420 && xPos >= 520) {
+                        drawer.closeDrawer(Gravity.RIGHT);
+                        onBackPressed();
+                        //edittext.setText(webView.getUrl());
+                    } else if (yPos > 1420 && yPos <= 1520 && xPos >= 520) {
+                        drawer.closeDrawer(Gravity.RIGHT);
+                        onForwardPressed();
+                        //edittext.setText(webView.getUrl());
+                    } else if (yPos > 1520 && yPos <= 1620 && xPos >= 520) {
+                        drawer.closeDrawer(Gravity.RIGHT);
                         onRefreshPress();
-                    } else if (yPos > 1630 && yPos <= 1730) {
+                    } else if (yPos > 1620 && yPos <= 1750 && xPos >= 520) {
+                        drawer.closeDrawer(Gravity.RIGHT);
                         onUrlPress();
+                    } else {
+                        //Toast.makeText(getApplicationContext(), "missed", Toast.LENGTH_SHORT).show();
                     }
                 }
-                Toast.makeText(getApplicationContext(), "touchListener UP", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "touchListener UP", Toast.LENGTH_SHORT).show();
                 isDragging = false;
                 break;
         }
@@ -256,13 +268,15 @@ public class MainActivity extends AppCompatActivity
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url) {
             //addToBackStack(url);
-            Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
+            edittext.setText(url);
             webView.loadUrl(url);
 
             return true;
         }
     }
 
+    /*
     private boolean addToBackStack(String url) {
         if (!isForward) {
             if (!forward_stack.isEmpty())
@@ -274,6 +288,7 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+    */
 
     private boolean onRefreshPress() {
         Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
@@ -282,6 +297,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /*
     private boolean onBackPress() {
         if (back_stack.isEmpty() || back_stack.size() == 1) {
             return false;
@@ -292,12 +308,19 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
     }
+    */
+
     @Override
     public void onBackPressed() {
         Toast.makeText(getApplicationContext(), R.string.btn_back, Toast.LENGTH_SHORT).show();
 
-        if (webView.canGoBack() && forward_stack.size()!= 1) {
+        if (webView.canGoBack() && forward_stack.size() != 1) {
+            WebBackForwardList mWebBackForwardList = webView.copyBackForwardList();
+            String historyUrl = mWebBackForwardList.getItemAtIndex(mWebBackForwardList.getCurrentIndex()-1).getUrl();
+            edittext.setText(historyUrl);
+
             webView.goBack();
+
             return;
         }
 
@@ -308,11 +331,18 @@ public class MainActivity extends AppCompatActivity
 
     public void onForwardPressed() {
         Toast.makeText(getApplicationContext(), R.string.btn_forward, Toast.LENGTH_SHORT).show();
-        isForward = true;
 
-        webView.goForward();
+        try {
+            WebBackForwardList mWebBackForwardList = webView.copyBackForwardList();
+            String forwardUrl = mWebBackForwardList.getItemAtIndex(mWebBackForwardList.getCurrentIndex()+1).getUrl();
+            edittext.setText(forwardUrl);
+            webView.goForward();
+        } catch (Exception e) {
+            // Nothing to go forward to
+        }
     }
 
+    /*
     private boolean onForwardPress() {
         if (forward_stack.isEmpty()) {
             return false;
@@ -323,9 +353,10 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
     }
+    */
 
     private boolean onUrlPress() {
-        Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
         edittext.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
@@ -341,7 +372,6 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         return super.onKeyDown(KeyCode, event);
-
     }
 
     /*
