@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -90,6 +91,31 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        // Top buttons
+        Button back_button = (Button) findViewById(R.id.buttonBackward);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPress();
+            }
+        });
+
+        Button forward_button = (Button) findViewById(R.id.buttonForward);
+        forward_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onForwardPress();
+            }
+        });
+
+        Button refresh_button = (Button) findViewById(R.id.button);
+        refresh_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRefreshPress();
+            }
+        });
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -109,7 +135,7 @@ public class MainActivity extends AppCompatActivity
             onForwardPress();
         } else if (id == R.id.btn_refresh) {
             Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
-            webView.loadUrl(webView.getUrl());
+            onRefreshPress();
         } else if (id == R.id.btn_url) {
             Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
             edittext.requestFocus();
@@ -141,6 +167,12 @@ public class MainActivity extends AppCompatActivity
         isForward = false;
 
         back_stack.addFirst(url);
+
+        return true;
+    }
+
+    private boolean onRefreshPress() {
+        webView.loadUrl(webView.getUrl());
 
         return true;
     }
