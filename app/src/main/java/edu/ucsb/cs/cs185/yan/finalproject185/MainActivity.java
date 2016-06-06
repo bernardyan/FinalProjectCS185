@@ -128,11 +128,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.btn_back) {
             Toast.makeText(getApplicationContext(), R.string.btn_back, Toast.LENGTH_SHORT).show();
-            onBackPress();
+            onBackPressed();
         } else if (id == R.id.btn_forward) {
             Toast.makeText(getApplicationContext(), R.string.btn_forward, Toast.LENGTH_SHORT).show();
             isForward = true;
-            onForwardPress();
+            onForwardPressed();
         } else if (id == R.id.btn_refresh) {
             Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
             onRefreshPress();
@@ -186,6 +186,23 @@ public class MainActivity extends AppCompatActivity
 
             return true;
         }
+    }
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+            return;
+        }
+
+        // Otherwise defer to system default behavior.
+        super.onBackPressed();
+    }
+
+
+    public void onForwardPressed() {
+        webView.goForward();
+
+
     }
 
     private boolean onForwardPress() {
