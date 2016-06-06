@@ -69,7 +69,6 @@
             app:itemIconTint="@color/colorPrimaryDark" />
 
 
-
     </android.support.v4.widget.DrawerLayout>
 
 

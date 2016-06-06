@@ -30,6 +30,10 @@ import android.gesture.Gesture;
 import java.net.URL;
 import java.security.Key;
 
+//forward/back
+import java.util.Deque;
+import java.util.ArrayDeque;
+
 import static android.view.GestureDetector.*;
 
 public class MainActivity extends AppCompatActivity
@@ -38,13 +42,22 @@ public class MainActivity extends AppCompatActivity
     WebView webView;
     private GestureDetector GestureDetect;
     DrawerLayout drawer;
+    Deque<String> back_stack = new ArrayDeque<>();
+    Deque<String> forward_stack = new ArrayDeque<>();
+    Boolean isForward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // initialize stacks for forward/back tracking
+        //back_stack = new ArrayDeque<>();
+        //forward_stack = new ArrayDeque<>();
+        isForward = false;
+
         webView = (WebView)findViewById(R.id.webView);
+        webView.setWebViewClient(new myWebViewClient());
         final EditText edittext = (EditText) findViewById(R.id.urlField);
 
         GestureDetect = new GestureDetector(this, this);
@@ -61,14 +74,18 @@ public class MainActivity extends AppCompatActivity
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
                     String url = edittext.getText().toString();
-                    if (url.substring(0,7).toLowerCase() != "http://" &&
+                    if (url.length() <= 7) {
+                        url = "http://" + url;
+                    } else if (url.substring(0,7).toLowerCase() != "http://" &&
                             url.substring(0,8).toLowerCase() != "https://") {
                         url = "http://" + url;
                     }
 
-                    Toast.makeText(getApplicationContext(),edittext.getText(), Toast.LENGTH_SHORT).show();
+                    addToBackStack(url);
+
+                    //Toast.makeText(getApplicationContext(),edittext.getText(), Toast.LENGTH_SHORT).show();
+                    //webView.setWebViewClient(new myWebViewClient());
                     webView.loadUrl(url);
-                    webView.setWebViewClient(new myWebViewClient());
                     return true;
                 }
                 return false;
@@ -94,16 +111,69 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        return false;
+        int id = item.getItemId();
+
+        if (id == R.id.btn_back) {
+            Toast.makeText(getApplicationContext(), R.string.btn_back, Toast.LENGTH_SHORT).show();
+            onBackPress();
+        } else if (id == R.id.btn_forward) {
+            Toast.makeText(getApplicationContext(), R.string.btn_forward, Toast.LENGTH_SHORT).show();
+            isForward = true;
+            onForwardPress();
+        } else if (id == R.id.btn_refresh) {
+            Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.btn_url) {
+            Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
+        }
+
+        drawer.closeDrawer(Gravity.RIGHT);
+
+        return true;
     }
 
     private class myWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView webView, String url){
+        public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+            //addToBackStack(url);
+            Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
             webView.loadUrl(url);
+
             return true;
         }
+    }
 
+    private boolean addToBackStack(String url) {
+        if (!isForward) {
+            if (!forward_stack.isEmpty())
+                forward_stack.clear();
+        }
+        isForward = false;
+
+        back_stack.addFirst(url);
+
+        return true;
+    }
+
+    private boolean onBackPress() {
+        if (back_stack.isEmpty() || back_stack.size() == 1) {
+            return false;
+        } else {
+            forward_stack.addFirst(back_stack.removeFirst());
+            webView.loadUrl(back_stack.peekFirst());
+
+            return true;
+        }
+    }
+
+    private boolean onForwardPress() {
+        if (forward_stack.isEmpty()) {
+            return false;
+        } else {
+            back_stack.addFirst(forward_stack.peekFirst());
+            webView.loadUrl(forward_stack.removeFirst());
+
+            return true;
+        }
     }
 
     @Override
