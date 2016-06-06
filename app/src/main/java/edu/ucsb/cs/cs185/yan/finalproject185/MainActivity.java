@@ -214,20 +214,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void clearHighlight() {
-        //s = new SpannableString(itemBack.getTitle());
-        //sBack.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sBack.length(), 0);
         itemBack.setTitle(sBackWhite);
-
-        //s = new SpannableString(itemForward.getTitle());
-        //sForward.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sForward.length(), 0);
         itemForward.setTitle(sForwardWhite);
-
-        //s = new SpannableString(itemRefresh.getTitle());
-        //sRefresh.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sRefresh.length(), 0);
         itemRefresh.setTitle(sRefreshWhite);
-
-        //s = new SpannableString(itemUrl.getTitle());
-        //sUrl.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sUrl.length(), 0);
         itemUrl.setTitle(sUrlWhite);
     }
 
