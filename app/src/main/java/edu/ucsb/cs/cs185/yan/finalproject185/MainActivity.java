@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity
             onForwardPress();
         } else if (id == R.id.btn_refresh) {
             Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
+            webView.loadUrl(webView.getUrl());
         } else if (id == R.id.btn_url) {
             Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
             edittext.requestFocus();
