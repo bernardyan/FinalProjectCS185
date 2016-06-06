@@ -1,11 +1,14 @@
 package edu.ucsb.cs.cs185.yan.finalproject185;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     Boolean isForward;
     EditText edittext;
     Boolean isDragging;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +101,38 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerListener(drawerListener);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        Menu navMenu = navigationView.getMenu();
+
+        MenuItem itemBack = navMenu.findItem(R.id.btn_back);
+        SpannableString sBackBlack = new SpannableString(itemBack.getTitle());
+        sBackBlack.setSpan(new ForegroundColorSpan(Color.BLACK), 0, sBackBlack.length(), 0);
+        SpannableString sBackWhite = new SpannableString(itemBack.getTitle());
+        sBackWhite.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sBackWhite.length(), 0);
+
+        MenuItem itemForward = navMenu.findItem(R.id.btn_forward);
+        SpannableString sForwardBlack = new SpannableString(itemForward.getTitle());
+        sForwardBlack.setSpan(new ForegroundColorSpan(Color.BLACK), 0, sForwardBlack.length(), 0);
+        SpannableString sForwardWhite = new SpannableString(itemForward.getTitle());
+        sForwardWhite.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sForwardWhite.length(), 0);
+
+        MenuItem itemRefresh = navMenu.findItem(R.id.btn_refresh);
+        SpannableString sRefreshBlack = new SpannableString(itemRefresh.getTitle());
+        sRefreshBlack.setSpan(new ForegroundColorSpan(Color.BLACK), 0, sRefreshBlack.length(), 0);
+        SpannableString sRefreshWhite = new SpannableString(itemRefresh.getTitle());
+        sRefreshWhite.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sRefreshWhite.length(), 0);
+
+        MenuItem itemUrl = navMenu.findItem(R.id.btn_url);
+        SpannableString sUrlBlack = new SpannableString(itemUrl.getTitle());
+        sUrlBlack.setSpan(new ForegroundColorSpan(Color.BLACK), 0, sUrlBlack.length(), 0);
+        SpannableString sUrlWhite = new SpannableString(itemUrl.getTitle());
+        sUrlWhite.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sUrlWhite.length(), 0);
+
         // do what you need to with the event, and then...
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
@@ -112,6 +142,34 @@ public class MainActivity extends AppCompatActivity
             case MotionEvent.ACTION_MOVE:
                 //Toast.makeText(getApplicationContext(), "touchListener MOVE", Toast.LENGTH_SHORT).show();
                 //edittext.setText(event.getRawX()+"");
+                float yPos0 = event.getRawY();
+                float xPos0 = event.getRawX();
+
+                if (yPos0 >= 1300 && yPos0 <= 1420 && xPos0 >= 520) {
+                    //edittext.setText("back");
+                    clearHighlight(itemBack, itemForward, itemRefresh, itemUrl,
+                            sBackWhite, sForwardWhite, sRefreshWhite, sUrlWhite);
+                    highlight(itemBack, sBackBlack);
+                } else if (yPos0 > 1420 && yPos0 <= 1520 && xPos0 >= 520) {
+                    //edittext.setText("forward");
+                    clearHighlight(itemBack, itemForward, itemRefresh, itemUrl,
+                            sBackWhite, sForwardWhite, sRefreshWhite, sUrlWhite);
+                    highlight(itemForward, sForwardBlack);
+                } else if (yPos0 > 1520 && yPos0 <= 1620 && xPos0 >= 520) {
+                    //edittext.setText("refresh");
+                    clearHighlight(itemBack, itemForward, itemRefresh, itemUrl,
+                            sBackWhite, sForwardWhite, sRefreshWhite, sUrlWhite);
+                    highlight(itemRefresh, sRefreshBlack);
+                } else if (yPos0 > 1620 && yPos0 <= 1750 && xPos0 >= 520) {
+                    //edittext.setText("url");
+                    clearHighlight(itemBack, itemForward, itemRefresh, itemUrl,
+                            sBackWhite, sForwardWhite, sRefreshWhite, sUrlWhite);
+                    highlight(itemUrl, sUrlBlack);
+                } else {
+                    //edittext.setText("clear");
+                    clearHighlight(itemBack, itemForward, itemRefresh, itemUrl,
+                            sBackWhite, sForwardWhite, sRefreshWhite, sUrlWhite);
+                }
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -143,6 +201,30 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    private void clearHighlight(MenuItem itemBack, MenuItem itemForward, MenuItem itemRefresh, MenuItem itemUrl,
+                                SpannableString sBack, SpannableString sForward, SpannableString sRefresh, SpannableString sUrl) {
+
+        //s = new SpannableString(itemBack.getTitle());
+        //sBack.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sBack.length(), 0);
+        itemBack.setTitle(sBack);
+
+        //s = new SpannableString(itemForward.getTitle());
+        //sForward.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sForward.length(), 0);
+        itemForward.setTitle(sForward);
+
+        //s = new SpannableString(itemRefresh.getTitle());
+        //sRefresh.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sRefresh.length(), 0);
+        itemRefresh.setTitle(sRefresh);
+
+        //s = new SpannableString(itemUrl.getTitle());
+        //sUrl.setSpan(new ForegroundColorSpan(Color.WHITE), 0, sUrl.length(), 0);
+        itemUrl.setTitle(sUrl);
+    }
+
+    private void highlight(MenuItem item, SpannableString s) {
+        item.setTitle(s);
     }
 
     DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
