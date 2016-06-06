@@ -3,6 +3,7 @@ package edu.ucsb.cs.cs185.yan.finalproject185;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -23,12 +24,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 //gesture libraries
 import android.view.MotionEvent;
-import android.gesture.Gesture;
+//import android.gesture.Gesture;
 
 import java.net.URL;
 import java.security.Key;
@@ -40,15 +42,18 @@ import java.util.ArrayDeque;
 import static android.view.GestureDetector.*;
 
 public class MainActivity extends AppCompatActivity
-        implements OnGestureListener, OnDoubleTapListener, NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     WebView webView;
-    private GestureDetector GestureDetect;
+    //private GestureDetector GestureDetect;
     DrawerLayout drawer;
+    //DrawerLayout drawer_view;
     Deque<String> back_stack = new ArrayDeque<>();
     Deque<String> forward_stack = new ArrayDeque<>();
     Boolean isForward;
     EditText edittext;
+    Boolean isDragging;
+    //CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +61,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         isForward = false;
+        isDragging = false;
 
         webView = (WebView)findViewById(R.id.webView);
         webView.setWebViewClient(new myWebViewClient());
         edittext = (EditText) findViewById(R.id.urlField);
 
-        GestureDetect = new GestureDetector(this, this);
-        GestureDetect.setOnDoubleTapListener(this);
+        //GestureDetect = new GestureDetector(this, this);
+        //GestureDetect.setOnDoubleTapListener(this);
 
         if (Build.VERSION.SDK_INT >= 19) {
             webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -77,8 +83,8 @@ public class MainActivity extends AppCompatActivity
                     String url = edittext.getText().toString();
                     if (url.length() <= 7) {
                         url = "http://" + url;
-                    } else if (url.substring(0,7).toLowerCase() != "http://" &&
-                            url.substring(0,8).toLowerCase() != "https://") {
+                    } else if (url.substring(0, 7).toLowerCase() != "http://" &&
+                            url.substring(0, 8).toLowerCase() != "https://") {
                         url = "http://" + url;
                     }
 
@@ -119,28 +125,126 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //MyNavigationView myNavigationView = new MyNavigationView(this);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        drawer.setDrawerListener(drawerListener);
+        //drawer_view = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        // touch
+        //TouchListener touchListener = new TouchListener();
+        //drawer.setOnTouchListener(touchListener);
+        //navigationView.setOnTouchListener(touchListener);
+        //coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        //coordinatorLayout = new MyCoordinatorLayout(this);
+
     }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        // do what you need to with the event, and then...
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                Toast.makeText(getApplicationContext(), "touchListener DOWN", Toast.LENGTH_SHORT).show();
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                //Toast.makeText(getApplicationContext(), "touchListener MOVE", Toast.LENGTH_SHORT).show();
+                //edittext.setText(event.getRawY()+"");
+                break;
+
+            case MotionEvent.ACTION_UP:
+                //edittext.setText("up");
+                float yPos = event.getRawY();
+
+                if (isDragging) {
+                    if (yPos >= 1320 && yPos <= 1430) {
+                        onBackPress();
+                    } else if (yPos > 1430 && yPos <= 1530) {
+                        onForwardPress();
+                    } else if (yPos > 1530 && yPos <= 1630) {
+                        onRefreshPress();
+                    } else if (yPos > 1630 && yPos <= 1730) {
+                        onUrlPress();
+                    }
+                }
+                Toast.makeText(getApplicationContext(), "touchListener UP", Toast.LENGTH_SHORT).show();
+                isDragging = false;
+                break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    /*
+    class TouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            switch(event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    Toast.makeText(getApplicationContext(), "touchListener DOWN", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    //Toast.makeText(getApplicationContext(), "touchListener MOVE", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    //edittext.setText("up");
+                    Toast.makeText(getApplicationContext(), "touchListener UP", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+    }
+    */
+
+    DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            switch(newState) {
+                case DrawerLayout.STATE_SETTLING:
+                    isDragging = false;
+                    break;
+                case DrawerLayout.STATE_IDLE:
+                    isDragging = false;
+                    break;
+                case DrawerLayout.STATE_DRAGGING:
+                    //Toast.makeText(getApplicationContext(), "STATE_DRAGGING", Toast.LENGTH_SHORT).show();
+                    isDragging = true;
+                    break;
+            }
+        }
+    };
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.btn_back) {
-            Toast.makeText(getApplicationContext(), R.string.btn_back, Toast.LENGTH_SHORT).show();
             onBackPressed();
         } else if (id == R.id.btn_forward) {
-            Toast.makeText(getApplicationContext(), R.string.btn_forward, Toast.LENGTH_SHORT).show();
-            isForward = true;
             onForwardPressed();
         } else if (id == R.id.btn_refresh) {
-            Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
             onRefreshPress();
         } else if (id == R.id.btn_url) {
-            Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
-            edittext.requestFocus();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
+            onUrlPress();
         }
 
         drawer.closeDrawer(Gravity.RIGHT);
@@ -172,6 +276,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean onRefreshPress() {
+        Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
         webView.loadUrl(webView.getUrl());
 
         return true;
@@ -189,6 +294,8 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void onBackPressed() {
+        Toast.makeText(getApplicationContext(), R.string.btn_back, Toast.LENGTH_SHORT).show();
+
         if (webView.canGoBack() && forward_stack.size()!= 1) {
             webView.goBack();
             return;
@@ -200,9 +307,10 @@ public class MainActivity extends AppCompatActivity
 
 
     public void onForwardPressed() {
+        Toast.makeText(getApplicationContext(), R.string.btn_forward, Toast.LENGTH_SHORT).show();
+        isForward = true;
+
         webView.goForward();
-
-
     }
 
     private boolean onForwardPress() {
@@ -216,6 +324,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private boolean onUrlPress() {
+        Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
+        edittext.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
+
+        return true;
+    }
+
     @Override
     public boolean onKeyDown(int KeyCode, KeyEvent event){
         if((KeyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack())
@@ -227,11 +344,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /*
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         GestureDetect.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
+    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -263,6 +382,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     @Override
     public boolean onDown(MotionEvent e) {
         return false;
@@ -309,4 +429,5 @@ public class MainActivity extends AppCompatActivity
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
     }
+    */
 }
