@@ -1,5 +1,6 @@
 package edu.ucsb.cs.cs185.yan.finalproject185;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -45,20 +47,18 @@ public class MainActivity extends AppCompatActivity
     Deque<String> back_stack = new ArrayDeque<>();
     Deque<String> forward_stack = new ArrayDeque<>();
     Boolean isForward;
+    EditText edittext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // initialize stacks for forward/back tracking
-        //back_stack = new ArrayDeque<>();
-        //forward_stack = new ArrayDeque<>();
         isForward = false;
 
         webView = (WebView)findViewById(R.id.webView);
         webView.setWebViewClient(new myWebViewClient());
-        final EditText edittext = (EditText) findViewById(R.id.urlField);
+        edittext = (EditText) findViewById(R.id.urlField);
 
         GestureDetect = new GestureDetector(this, this);
         GestureDetect.setOnDoubleTapListener(this);
@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity
 
                     addToBackStack(url);
 
-                    //Toast.makeText(getApplicationContext(),edittext.getText(), Toast.LENGTH_SHORT).show();
-                    //webView.setWebViewClient(new myWebViewClient());
                     webView.loadUrl(url);
                     return true;
                 }
@@ -92,21 +90,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(
-        //        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //drawer.setDrawerListener(toggle);
-        //toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //ListView listView =  (ListView) findViewById(R.id.right_drawer);
-        //listView.
-
     }
 
     @Override
@@ -124,6 +111,9 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(getApplicationContext(), R.string.btn_refresh, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.btn_url) {
             Toast.makeText(getApplicationContext(), R.string.btn_url, Toast.LENGTH_SHORT).show();
+            edittext.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
         }
 
         drawer.closeDrawer(Gravity.RIGHT);

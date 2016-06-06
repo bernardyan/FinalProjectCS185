@@ -59,7 +59,8 @@
         android:layout_toEndOf="@id/buttonForward"
         android:layout_marginTop="0dp"
         android:singleLine="true"
-        android:selectAllOnFocus="true" />
+        android:selectAllOnFocus="true"
+        android:inputType="textWebEmailAddress" />
     
 
 </RelativeLayout>
